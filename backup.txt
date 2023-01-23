@@ -1,0 +1,15 @@
+PROGRAM IS
+VAR a, b
+BEGIN
+    READ a;
+    REPEAT
+        b := a / 2;
+        b := b * 2;
+        IF a >= b THEN
+            WRITE 1;
+        ELSE
+            WRITE 0;
+        ENDIF
+        a := a / 2;
+    UNTIL a=0;
+END
