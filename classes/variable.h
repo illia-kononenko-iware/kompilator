@@ -7,16 +7,17 @@
 class Var {
     public:
 
-        Var(std::string name, int address) {
+        Var(std::string name, int address, bool isParameter) {
             // std::cout << "Inside variable constructor\n";
             this->name = name;
             this->address = address;
             this->value = 0;
             this->isConstant_flag = false;
             this->initialized = false;
+            this->isParameterFlag = isParameter;
         }
 
-        Var(int value) {
+        Var(uint64_t value) {
             // std::cout << "Inside constant constructor\n";
             this->name = "const";
             this->address = 0;
@@ -34,7 +35,7 @@ class Var {
 
         std::string getName() { return this->name; }
 
-        int getConstValue() { return this->value; }
+        uint64_t getConstValue() { return this->value; }
 
         std::string getConstValueAsString() { return std::to_string(this->value); }
 
@@ -42,12 +43,15 @@ class Var {
 
         bool isInitialized() { return this->initialized; }
 
+        bool isParameter() { return this->isParameterFlag; }
+
     private:
         std::string name;
         int address;
-        int value;
+        uint64_t value;
         bool isConstant_flag;
         bool initialized;
+        bool isParameterFlag = false;
 };
 
 #endif

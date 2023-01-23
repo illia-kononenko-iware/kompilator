@@ -42,9 +42,15 @@ void code_generator::Operations::add(Var* var1, Var* var2) {
 
     // both are vars
     if (!var1->isConstant() && !var2->isConstant()) {
-        this->codeGen.commands.push_back(new Command(LOAD, 
-            var1->getConstValueAsString()
-        ));
+        if (var1->isParameter()) {
+            this->codeGen.commands.push_back(new Command(LOADI, 
+                var1->getConstValueAsString()
+            ));
+        } else {
+            this->codeGen.commands.push_back(new Command(LOAD, 
+                var1->getConstValueAsString()
+            ));
+        }
         this->codeGen.commands.push_back(new Command(ADD, 
             var2->getAddressAsString()
         ));
@@ -115,7 +121,7 @@ void code_generator::Operations::sub(Var* var1, Var* var2) {
 void code_generator::Operations::mul(Var* var1, Var* var2) {
     if (var2->isConstant()) {
         if (var1->isConstant()) {
-            int result = var1->getConstValue() / var2->getConstValue();
+            uint64_t result = var1->getConstValue() * var2->getConstValue();
             this->codeGen.commands.push_back(new Command(SET, std::to_string(result)));
             return;
         }

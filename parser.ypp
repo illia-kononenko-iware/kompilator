@@ -20,16 +20,18 @@
 %}
 
 %union {
-    int num;
+    uint64_t num;
     std::string* str;
     Var* variable;
     Condition cond;
     IfElseParam ifElse;
+    ProcedureStruct procedureParam;
 }
 
 %start program_all
 
 %token PROGRAM IS VAR _BEGIN END
+%token LBRACKET RBRACKET
 %token READ WRITE
 %token <ifElse> IF
 %token THEN ELSE ENDIF
@@ -40,6 +42,7 @@
 %token UNTIL
 %token INVALIDCHAR
 %token SEMICOLON
+%token PROCEDURE
 
 %token EQ NE LT GT LE GE
 
@@ -51,22 +54,29 @@
 %type <variable> identifier value
 %type <str> expression
 %type <cond> condition
-
+%type <num> procedures
+%type <procedureParam> proc_head
 
 %%
 
 program_all: 
-    procedures main         { code_generator_instance->endGenerateCode(); }
+    procedures          { code_generator_instance->finishProceduresDeclaration($1); }  
+    main                { code_generator_instance->endGenerateCode(); }
 ;
 
 procedures:
-    // procedures PROCEDURE proc_head IS VAR declarations BEGIN commands END
-    // | procedures PROCEDURE proc_head IS BEGIN commands END
-    // |
+    procedures PROCEDURE         
+    proc_head IS VAR            { var_map_instance->stopCreatingParameters(); }
+    declarations                { code_generator_instance->finishProcedureDeclaration(); }
+    _BEGIN commands END         { code_generator_instance->finishProcedure(); $$ = code_generator_instance->getK(); }
+    | procedures PROCEDURE proc_head IS _BEGIN commands END                      { $$ = code_generator_instance->getK(); }
+    |                                                                           { $$ = code_generator_instance->getK(); }
 ;
 
 main:
-    PROGRAM IS VAR declarations _BEGIN commands END
+    PROGRAM IS VAR { var_map_instance->stopCreatingParameters();}
+    declarations _BEGIN { var_map_instance->startCallingArguments(); }
+    commands END
     | PROGRAM IS _BEGIN commands END
 ;
 
@@ -83,18 +93,21 @@ command:
     |   WHILE condition DO commands ENDWHILE            { code_generator_instance->flowControl()->whileLoop($2); }
     |   REPEAT                                                { $1 = code_generator_instance->flowControl()->repeatUntil_Start(); }
         commands UNTIL condition SEMICOLON                      { code_generator_instance->flowControl()->repeatUntil_End($5, $1); }                   
+    |   proc_head                                                       { code_generator_instance->jumpToStartProcedure(); }
     |   READ identifier SEMICOLON                                       { code_generator_instance->readVariable($2); }   
     |   WRITE value SEMICOLON                                           { code_generator_instance->writeVariable($2); }
     |   expression                       
 ;
 
 proc_head:
-    PIDENTIFIER declarations 
+    PIDENTIFIER                                 { std::cout << "Calling proc_head " << *$1 << std::endl; var_map_instance->callProcedure(*$1); } 
+    LBRACKET declarations RBRACKET          { std::cout << "End of calling proc_head\n"; var_map_instance->stopCallingArguments(); std::cout << "End of calling proc_head 2\n"; }                          
 ;
 
 declarations:
-    declarations COMMA declaration      
-    | declaration                       
+    declarations COMMA declaration       
+    | declaration       
+    |                
 ;
 
 declaration:
@@ -127,8 +140,6 @@ value:
 
 identifier:
     PIDENTIFIER                                     { $$ = var_map_instance->getVariable(*$1); }
-    // |   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET      { $$ = memory->getArrayVariable(*$1, *$3); }
-    // |   PIDENTIFIER LBRACKET NUM RBRACKET               { $$ = memory->getArrayVariable(*$1, $3); }
 ;
 
 %%

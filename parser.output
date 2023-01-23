@@ -1,161 +1,193 @@
-Nonterminals useless in grammar
-
-    proc_head
-
-
 Terminals unused in grammar
 
     INVALIDCHAR
-
-
-Rules useless in grammar
-
-   35 proc_head: PIDENTIFIER declarations
 
 
 Grammar
 
     0 $accept: program_all $end
 
-    1 program_all: procedures main
+    1 $@1: %empty
 
-    2 procedures: %empty
+    2 program_all: procedures $@1 main
 
-    3 main: PROGRAM IS VAR declarations _BEGIN commands END
-    4     | PROGRAM IS _BEGIN commands END
+    3 $@2: %empty
 
-    5 commands: commands command
-    6         | command
+    4 $@3: %empty
 
-    7 command: identifier ASSIGN expression SEMICOLON
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 declarations $@3 _BEGIN commands END
+    6           | procedures PROCEDURE proc_head IS _BEGIN commands END
+    7           | %empty
 
-    8 $@1: %empty
+    8 $@4: %empty
 
-    9 command: IF condition THEN commands $@1 ELSE commands ENDIF
-   10        | IF condition THEN commands ENDIF
-   11        | WHILE condition DO commands ENDWHILE
+    9 $@5: %empty
 
-   12 $@2: %empty
+   10 main: PROGRAM IS VAR $@4 declarations _BEGIN $@5 commands END
+   11     | PROGRAM IS _BEGIN commands END
 
-   13 command: REPEAT $@2 commands UNTIL condition SEMICOLON
-   14        | READ identifier SEMICOLON
-   15        | WRITE value SEMICOLON
-   16        | expression
+   12 commands: commands command
+   13         | command
 
-   17 declarations: declarations COMMA declaration
-   18             | declaration
+   14 command: identifier ASSIGN expression SEMICOLON
 
-   19 declaration: PIDENTIFIER
+   15 $@6: %empty
 
-   20 expression: value
-   21           | value PLUS value
-   22           | value MINUS value
-   23           | value MUL value
-   24           | value DIV value
-   25           | value MODULO value
+   16 command: IF condition THEN commands $@6 ELSE commands ENDIF
+   17        | IF condition THEN commands ENDIF
+   18        | WHILE condition DO commands ENDWHILE
 
-   26 condition: value EQ value
-   27          | value NE value
-   28          | value LT value
-   29          | value GT value
-   30          | value LE value
-   31          | value GE value
+   19 $@7: %empty
 
-   32 value: INT
-   33      | identifier
+   20 command: REPEAT $@7 commands UNTIL condition SEMICOLON
+   21        | proc_head
+   22        | READ identifier SEMICOLON
+   23        | WRITE value SEMICOLON
+   24        | expression
 
-   34 identifier: PIDENTIFIER
+   25 $@8: %empty
+
+   26 proc_head: PIDENTIFIER $@8 LBRACKET declarations RBRACKET
+
+   27 declarations: declarations COMMA declaration
+   28             | declaration
+   29             | %empty
+
+   30 declaration: PIDENTIFIER
+
+   31 expression: value
+   32           | value PLUS value
+   33           | value MINUS value
+   34           | value MUL value
+   35           | value DIV value
+   36           | value MODULO value
+
+   37 condition: value EQ value
+   38          | value NE value
+   39          | value LT value
+   40          | value GT value
+   41          | value LE value
+   42          | value GE value
+
+   43 value: INT
+   44      | identifier
+
+   45 identifier: PIDENTIFIER
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    PROGRAM (258) 3 4
-    IS (259) 3 4
-    VAR (260) 3
-    _BEGIN (261) 3 4
-    END (262) 3 4
-    READ (263) 14
-    WRITE (264) 15
-    IF <ifElse> (265) 9 10
-    THEN (266) 9 10
-    ELSE (267) 9
-    ENDIF (268) 9 10
-    WHILE (269) 11
-    DO (270) 11
-    ENDWHILE (271) 11
-    ASSIGN (272) 7
-    COMMA (273) 17
-    REPEAT <num> (274) 13
-    UNTIL (275) 13
-    INVALIDCHAR (276)
-    SEMICOLON (277) 7 13 14 15
-    EQ (278) 26
-    NE (279) 27
-    LT (280) 28
-    GT (281) 29
-    LE (282) 30
-    GE (283) 31
-    PLUS (284) 21
-    MINUS (285) 22
-    MUL (286) 23
-    DIV (287) 24
-    MODULO (288) 25
-    INT <num> (289) 32
-    PIDENTIFIER <str> (290) 19 34
+    PROGRAM (258) 10 11
+    IS (259) 5 6 10 11
+    VAR (260) 5 10
+    _BEGIN (261) 5 6 10 11
+    END (262) 5 6 10 11
+    LBRACKET (263) 26
+    RBRACKET (264) 26
+    READ (265) 22
+    WRITE (266) 23
+    IF <ifElse> (267) 16 17
+    THEN (268) 16 17
+    ELSE (269) 16
+    ENDIF (270) 16 17
+    WHILE (271) 18
+    DO (272) 18
+    ENDWHILE (273) 18
+    ASSIGN (274) 14
+    COMMA (275) 27
+    REPEAT <num> (276) 20
+    UNTIL (277) 20
+    INVALIDCHAR (278)
+    SEMICOLON (279) 14 20 22 23
+    PROCEDURE (280) 5 6
+    EQ (281) 37
+    NE (282) 38
+    LT (283) 39
+    GT (284) 40
+    LE (285) 41
+    GE (286) 42
+    PLUS (287) 32
+    MINUS (288) 33
+    MUL (289) 34
+    DIV (290) 35
+    MODULO (291) 36
+    INT <num> (292) 43
+    PIDENTIFIER <str> (293) 26 30 45
 
 
 Nonterminals, with rules where they appear
 
-    $accept (36)
+    $accept (39)
         on left: 0
-    program_all (37)
-        on left: 1
-        on right: 0
-    procedures (38)
+    program_all (40)
         on left: 2
-        on right: 1
-    main (39)
-        on left: 3 4
-        on right: 1
-    commands (40)
-        on left: 5 6
-        on right: 3 4 5 9 10 11 13
-    command (41)
-        on left: 7 9 10 11 13 14 15 16
-        on right: 5 6
-    $@1 (42)
-        on left: 8
-        on right: 9
+        on right: 0
+    $@1 (41)
+        on left: 1
+        on right: 2
+    procedures <num> (42)
+        on left: 5 6 7
+        on right: 2 5 6
     $@2 (43)
-        on left: 12
-        on right: 13
-    declarations (44)
-        on left: 17 18
-        on right: 3 17
-    declaration (45)
+        on left: 3
+        on right: 5
+    $@3 (44)
+        on left: 4
+        on right: 5
+    main (45)
+        on left: 10 11
+        on right: 2
+    $@4 (46)
+        on left: 8
+        on right: 10
+    $@5 (47)
+        on left: 9
+        on right: 10
+    commands (48)
+        on left: 12 13
+        on right: 5 6 10 11 12 16 17 18 20
+    command (49)
+        on left: 14 16 17 18 20 21 22 23 24
+        on right: 12 13
+    $@6 (50)
+        on left: 15
+        on right: 16
+    $@7 (51)
         on left: 19
-        on right: 17 18
-    expression <str> (46)
-        on left: 20 21 22 23 24 25
-        on right: 7 16
-    condition <cond> (47)
-        on left: 26 27 28 29 30 31
-        on right: 9 10 11 13
-    value <variable> (48)
-        on left: 32 33
-        on right: 15 20 21 22 23 24 25 26 27 28 29 30 31
-    identifier <variable> (49)
-        on left: 34
-        on right: 7 14 33
+        on right: 20
+    proc_head <procedureParam> (52)
+        on left: 26
+        on right: 5 6 21
+    $@8 (53)
+        on left: 25
+        on right: 26
+    declarations (54)
+        on left: 27 28 29
+        on right: 5 10 26 27
+    declaration (55)
+        on left: 30
+        on right: 27 28
+    expression <str> (56)
+        on left: 31 32 33 34 35 36
+        on right: 14 24
+    condition <cond> (57)
+        on left: 37 38 39 40 41 42
+        on right: 16 17 18 20
+    value <variable> (58)
+        on left: 43 44
+        on right: 23 31 32 33 34 35 36 37 38 39 40 41 42
+    identifier <variable> (59)
+        on left: 45
+        on right: 14 22 44
 
 
 State 0
 
     0 $accept: . program_all $end
 
-    $default  reduce using rule 2 (procedures)
+    $default  reduce using rule 7 (procedures)
 
     program_all  go to state 1
     procedures   go to state 2
@@ -170,11 +202,15 @@ State 1
 
 State 2
 
-    1 program_all: procedures . main
+    2 program_all: procedures . $@1 main
+    5 procedures: procedures . PROCEDURE proc_head IS VAR $@2 declarations $@3 _BEGIN commands END
+    6           | procedures . PROCEDURE proc_head IS _BEGIN commands END
 
-    PROGRAM  shift, and go to state 4
+    PROCEDURE  shift, and go to state 4
 
-    main  go to state 5
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 5
 
 
 State 3
@@ -186,787 +222,1053 @@ State 3
 
 State 4
 
-    3 main: PROGRAM . IS VAR declarations _BEGIN commands END
-    4     | PROGRAM . IS _BEGIN commands END
+    5 procedures: procedures PROCEDURE . proc_head IS VAR $@2 declarations $@3 _BEGIN commands END
+    6           | procedures PROCEDURE . proc_head IS _BEGIN commands END
 
-    IS  shift, and go to state 6
+    PIDENTIFIER  shift, and go to state 6
+
+    proc_head  go to state 7
 
 
 State 5
 
-    1 program_all: procedures main .
+    2 program_all: procedures $@1 . main
 
-    $default  reduce using rule 1 (program_all)
+    PROGRAM  shift, and go to state 8
+
+    main  go to state 9
 
 
 State 6
 
-    3 main: PROGRAM IS . VAR declarations _BEGIN commands END
-    4     | PROGRAM IS . _BEGIN commands END
+   26 proc_head: PIDENTIFIER . $@8 LBRACKET declarations RBRACKET
 
-    VAR     shift, and go to state 7
-    _BEGIN  shift, and go to state 8
+    $default  reduce using rule 25 ($@8)
+
+    $@8  go to state 10
 
 
 State 7
 
-    3 main: PROGRAM IS VAR . declarations _BEGIN commands END
+    5 procedures: procedures PROCEDURE proc_head . IS VAR $@2 declarations $@3 _BEGIN commands END
+    6           | procedures PROCEDURE proc_head . IS _BEGIN commands END
 
-    PIDENTIFIER  shift, and go to state 9
-
-    declarations  go to state 10
-    declaration   go to state 11
+    IS  shift, and go to state 11
 
 
 State 8
 
-    4 main: PROGRAM IS _BEGIN . commands END
+   10 main: PROGRAM . IS VAR $@4 declarations _BEGIN $@5 commands END
+   11     | PROGRAM . IS _BEGIN commands END
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    commands    go to state 19
-    command     go to state 20
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    IS  shift, and go to state 12
 
 
 State 9
 
-   19 declaration: PIDENTIFIER .
+    2 program_all: procedures $@1 main .
 
-    $default  reduce using rule 19 (declaration)
+    $default  reduce using rule 2 (program_all)
 
 
 State 10
 
-    3 main: PROGRAM IS VAR declarations . _BEGIN commands END
-   17 declarations: declarations . COMMA declaration
+   26 proc_head: PIDENTIFIER $@8 . LBRACKET declarations RBRACKET
 
-    _BEGIN  shift, and go to state 24
-    COMMA   shift, and go to state 25
+    LBRACKET  shift, and go to state 13
 
 
 State 11
 
-   18 declarations: declaration .
+    5 procedures: procedures PROCEDURE proc_head IS . VAR $@2 declarations $@3 _BEGIN commands END
+    6           | procedures PROCEDURE proc_head IS . _BEGIN commands END
 
-    $default  reduce using rule 18 (declarations)
+    VAR     shift, and go to state 14
+    _BEGIN  shift, and go to state 15
 
 
 State 12
 
-   14 command: READ . identifier SEMICOLON
+   10 main: PROGRAM IS . VAR $@4 declarations _BEGIN $@5 commands END
+   11     | PROGRAM IS . _BEGIN commands END
 
-    PIDENTIFIER  shift, and go to state 18
-
-    identifier  go to state 26
+    VAR     shift, and go to state 16
+    _BEGIN  shift, and go to state 17
 
 
 State 13
 
-   15 command: WRITE . value SEMICOLON
+   26 proc_head: PIDENTIFIER $@8 LBRACKET . declarations RBRACKET
 
-    INT          shift, and go to state 17
     PIDENTIFIER  shift, and go to state 18
 
-    value       go to state 27
-    identifier  go to state 28
+    $default  reduce using rule 29 (declarations)
+
+    declarations  go to state 19
+    declaration   go to state 20
 
 
 State 14
 
-    9 command: IF . condition THEN commands $@1 ELSE commands ENDIF
-   10        | IF . condition THEN commands ENDIF
+    5 procedures: procedures PROCEDURE proc_head IS VAR . $@2 declarations $@3 _BEGIN commands END
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    $default  reduce using rule 3 ($@2)
 
-    condition   go to state 29
-    value       go to state 30
-    identifier  go to state 28
+    $@2  go to state 21
 
 
 State 15
 
-   11 command: WHILE . condition DO commands ENDWHILE
+    6 procedures: procedures PROCEDURE proc_head IS _BEGIN . commands END
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
 
-    condition   go to state 31
-    value       go to state 30
-    identifier  go to state 28
+    commands    go to state 29
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 16
 
-   13 command: REPEAT . $@2 commands UNTIL condition SEMICOLON
+   10 main: PROGRAM IS VAR . $@4 declarations _BEGIN $@5 commands END
 
-    $default  reduce using rule 12 ($@2)
+    $default  reduce using rule 8 ($@4)
 
-    $@2  go to state 32
+    $@4  go to state 35
 
 
 State 17
 
-   32 value: INT .
+   11 main: PROGRAM IS _BEGIN . commands END
 
-    $default  reduce using rule 32 (value)
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    commands    go to state 36
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 18
 
-   34 identifier: PIDENTIFIER .
+   30 declaration: PIDENTIFIER .
 
-    $default  reduce using rule 34 (identifier)
+    $default  reduce using rule 30 (declaration)
 
 
 State 19
 
-    4 main: PROGRAM IS _BEGIN commands . END
-    5 commands: commands . command
+   26 proc_head: PIDENTIFIER $@8 LBRACKET declarations . RBRACKET
+   27 declarations: declarations . COMMA declaration
 
-    END          shift, and go to state 33
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    command     go to state 34
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    RBRACKET  shift, and go to state 37
+    COMMA     shift, and go to state 38
 
 
 State 20
 
-    6 commands: command .
+   28 declarations: declaration .
 
-    $default  reduce using rule 6 (commands)
+    $default  reduce using rule 28 (declarations)
 
 
 State 21
 
-   16 command: expression .
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 . declarations $@3 _BEGIN commands END
 
-    $default  reduce using rule 16 (command)
+    PIDENTIFIER  shift, and go to state 18
+
+    $default  reduce using rule 29 (declarations)
+
+    declarations  go to state 39
+    declaration   go to state 20
 
 
 State 22
 
-   20 expression: value .
-   21           | value . PLUS value
-   22           | value . MINUS value
-   23           | value . MUL value
-   24           | value . DIV value
-   25           | value . MODULO value
+   22 command: READ . identifier SEMICOLON
 
-    PLUS    shift, and go to state 35
-    MINUS   shift, and go to state 36
-    MUL     shift, and go to state 37
-    DIV     shift, and go to state 38
-    MODULO  shift, and go to state 39
+    PIDENTIFIER  shift, and go to state 40
 
-    $default  reduce using rule 20 (expression)
+    identifier  go to state 41
 
 
 State 23
 
-    7 command: identifier . ASSIGN expression SEMICOLON
-   33 value: identifier .
+   23 command: WRITE . value SEMICOLON
 
-    ASSIGN  shift, and go to state 40
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    $default  reduce using rule 33 (value)
+    value       go to state 42
+    identifier  go to state 43
 
 
 State 24
 
-    3 main: PROGRAM IS VAR declarations _BEGIN . commands END
+   16 command: IF . condition THEN commands $@6 ELSE commands ENDIF
+   17        | IF . condition THEN commands ENDIF
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    commands    go to state 41
-    command     go to state 20
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    condition   go to state 44
+    value       go to state 45
+    identifier  go to state 43
 
 
 State 25
 
-   17 declarations: declarations COMMA . declaration
+   18 command: WHILE . condition DO commands ENDWHILE
 
-    PIDENTIFIER  shift, and go to state 9
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    declaration  go to state 42
+    condition   go to state 46
+    value       go to state 45
+    identifier  go to state 43
 
 
 State 26
 
-   14 command: READ identifier . SEMICOLON
+   20 command: REPEAT . $@7 commands UNTIL condition SEMICOLON
 
-    SEMICOLON  shift, and go to state 43
+    $default  reduce using rule 19 ($@7)
+
+    $@7  go to state 47
 
 
 State 27
 
-   15 command: WRITE value . SEMICOLON
+   43 value: INT .
 
-    SEMICOLON  shift, and go to state 44
+    $default  reduce using rule 43 (value)
 
 
 State 28
 
-   33 value: identifier .
+   26 proc_head: PIDENTIFIER . $@8 LBRACKET declarations RBRACKET
+   45 identifier: PIDENTIFIER .
 
-    $default  reduce using rule 33 (value)
+    LBRACKET  reduce using rule 25 ($@8)
+    $default  reduce using rule 45 (identifier)
+
+    $@8  go to state 10
 
 
 State 29
 
-    9 command: IF condition . THEN commands $@1 ELSE commands ENDIF
-   10        | IF condition . THEN commands ENDIF
+    6 procedures: procedures PROCEDURE proc_head IS _BEGIN commands . END
+   12 commands: commands . command
 
-    THEN  shift, and go to state 45
+    END          shift, and go to state 48
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 30
 
-   26 condition: value . EQ value
-   27          | value . NE value
-   28          | value . LT value
-   29          | value . GT value
-   30          | value . LE value
-   31          | value . GE value
+   13 commands: command .
 
-    EQ  shift, and go to state 46
-    NE  shift, and go to state 47
-    LT  shift, and go to state 48
-    GT  shift, and go to state 49
-    LE  shift, and go to state 50
-    GE  shift, and go to state 51
+    $default  reduce using rule 13 (commands)
 
 
 State 31
 
-   11 command: WHILE condition . DO commands ENDWHILE
+   21 command: proc_head .
 
-    DO  shift, and go to state 52
+    $default  reduce using rule 21 (command)
 
 
 State 32
 
-   13 command: REPEAT $@2 . commands UNTIL condition SEMICOLON
+   24 command: expression .
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    commands    go to state 53
-    command     go to state 20
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    $default  reduce using rule 24 (command)
 
 
 State 33
 
-    4 main: PROGRAM IS _BEGIN commands END .
+   31 expression: value .
+   32           | value . PLUS value
+   33           | value . MINUS value
+   34           | value . MUL value
+   35           | value . DIV value
+   36           | value . MODULO value
 
-    $default  reduce using rule 4 (main)
+    PLUS    shift, and go to state 50
+    MINUS   shift, and go to state 51
+    MUL     shift, and go to state 52
+    DIV     shift, and go to state 53
+    MODULO  shift, and go to state 54
+
+    $default  reduce using rule 31 (expression)
 
 
 State 34
 
-    5 commands: commands command .
+   14 command: identifier . ASSIGN expression SEMICOLON
+   44 value: identifier .
 
-    $default  reduce using rule 5 (commands)
+    ASSIGN  shift, and go to state 55
+
+    $default  reduce using rule 44 (value)
 
 
 State 35
 
-   21 expression: value PLUS . value
+   10 main: PROGRAM IS VAR $@4 . declarations _BEGIN $@5 commands END
 
-    INT          shift, and go to state 17
     PIDENTIFIER  shift, and go to state 18
 
-    value       go to state 54
-    identifier  go to state 28
+    $default  reduce using rule 29 (declarations)
+
+    declarations  go to state 56
+    declaration   go to state 20
 
 
 State 36
 
-   22 expression: value MINUS . value
+   11 main: PROGRAM IS _BEGIN commands . END
+   12 commands: commands . command
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    END          shift, and go to state 57
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
 
-    value       go to state 55
-    identifier  go to state 28
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 37
 
-   23 expression: value MUL . value
+   26 proc_head: PIDENTIFIER $@8 LBRACKET declarations RBRACKET .
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    value       go to state 56
-    identifier  go to state 28
+    $default  reduce using rule 26 (proc_head)
 
 
 State 38
 
-   24 expression: value DIV . value
+   27 declarations: declarations COMMA . declaration
 
-    INT          shift, and go to state 17
     PIDENTIFIER  shift, and go to state 18
 
-    value       go to state 57
-    identifier  go to state 28
+    declaration  go to state 58
 
 
 State 39
 
-   25 expression: value MODULO . value
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 declarations . $@3 _BEGIN commands END
+   27 declarations: declarations . COMMA declaration
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    COMMA  shift, and go to state 38
 
-    value       go to state 58
-    identifier  go to state 28
+    $default  reduce using rule 4 ($@3)
+
+    $@3  go to state 59
 
 
 State 40
 
-    7 command: identifier ASSIGN . expression SEMICOLON
+   45 identifier: PIDENTIFIER .
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    expression  go to state 59
-    value       go to state 22
-    identifier  go to state 28
+    $default  reduce using rule 45 (identifier)
 
 
 State 41
 
-    3 main: PROGRAM IS VAR declarations _BEGIN commands . END
-    5 commands: commands . command
+   22 command: READ identifier . SEMICOLON
 
-    END          shift, and go to state 60
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    command     go to state 34
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    SEMICOLON  shift, and go to state 60
 
 
 State 42
 
-   17 declarations: declarations COMMA declaration .
+   23 command: WRITE value . SEMICOLON
 
-    $default  reduce using rule 17 (declarations)
+    SEMICOLON  shift, and go to state 61
 
 
 State 43
 
-   14 command: READ identifier SEMICOLON .
+   44 value: identifier .
 
-    $default  reduce using rule 14 (command)
+    $default  reduce using rule 44 (value)
 
 
 State 44
 
-   15 command: WRITE value SEMICOLON .
+   16 command: IF condition . THEN commands $@6 ELSE commands ENDIF
+   17        | IF condition . THEN commands ENDIF
 
-    $default  reduce using rule 15 (command)
+    THEN  shift, and go to state 62
 
 
 State 45
 
-    9 command: IF condition THEN . commands $@1 ELSE commands ENDIF
-   10        | IF condition THEN . commands ENDIF
+   37 condition: value . EQ value
+   38          | value . NE value
+   39          | value . LT value
+   40          | value . GT value
+   41          | value . LE value
+   42          | value . GE value
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    commands    go to state 61
-    command     go to state 20
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    EQ  shift, and go to state 63
+    NE  shift, and go to state 64
+    LT  shift, and go to state 65
+    GT  shift, and go to state 66
+    LE  shift, and go to state 67
+    GE  shift, and go to state 68
 
 
 State 46
 
-   26 condition: value EQ . value
+   18 command: WHILE condition . DO commands ENDWHILE
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    value       go to state 62
-    identifier  go to state 28
+    DO  shift, and go to state 69
 
 
 State 47
 
-   27 condition: value NE . value
+   20 command: REPEAT $@7 . commands UNTIL condition SEMICOLON
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
 
-    value       go to state 63
-    identifier  go to state 28
+    commands    go to state 70
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 48
 
-   28 condition: value LT . value
+    6 procedures: procedures PROCEDURE proc_head IS _BEGIN commands END .
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    value       go to state 64
-    identifier  go to state 28
+    $default  reduce using rule 6 (procedures)
 
 
 State 49
 
-   29 condition: value GT . value
+   12 commands: commands command .
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    value       go to state 65
-    identifier  go to state 28
+    $default  reduce using rule 12 (commands)
 
 
 State 50
 
-   30 condition: value LE . value
+   32 expression: value PLUS . value
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    value       go to state 66
-    identifier  go to state 28
+    value       go to state 71
+    identifier  go to state 43
 
 
 State 51
 
-   31 condition: value GE . value
+   33 expression: value MINUS . value
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    value       go to state 67
-    identifier  go to state 28
+    value       go to state 72
+    identifier  go to state 43
 
 
 State 52
 
-   11 command: WHILE condition DO . commands ENDWHILE
+   34 expression: value MUL . value
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    commands    go to state 68
-    command     go to state 20
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    value       go to state 73
+    identifier  go to state 43
 
 
 State 53
 
-    5 commands: commands . command
-   13 command: REPEAT $@2 commands . UNTIL condition SEMICOLON
+   35 expression: value DIV . value
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    UNTIL        shift, and go to state 69
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    command     go to state 34
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    value       go to state 74
+    identifier  go to state 43
 
 
 State 54
 
-   21 expression: value PLUS value .
+   36 expression: value MODULO . value
 
-    $default  reduce using rule 21 (expression)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    value       go to state 75
+    identifier  go to state 43
 
 
 State 55
 
-   22 expression: value MINUS value .
+   14 command: identifier ASSIGN . expression SEMICOLON
 
-    $default  reduce using rule 22 (expression)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    expression  go to state 76
+    value       go to state 33
+    identifier  go to state 43
 
 
 State 56
 
-   23 expression: value MUL value .
+   10 main: PROGRAM IS VAR $@4 declarations . _BEGIN $@5 commands END
+   27 declarations: declarations . COMMA declaration
 
-    $default  reduce using rule 23 (expression)
+    _BEGIN  shift, and go to state 77
+    COMMA   shift, and go to state 38
 
 
 State 57
 
-   24 expression: value DIV value .
+   11 main: PROGRAM IS _BEGIN commands END .
 
-    $default  reduce using rule 24 (expression)
+    $default  reduce using rule 11 (main)
 
 
 State 58
 
-   25 expression: value MODULO value .
+   27 declarations: declarations COMMA declaration .
 
-    $default  reduce using rule 25 (expression)
+    $default  reduce using rule 27 (declarations)
 
 
 State 59
 
-    7 command: identifier ASSIGN expression . SEMICOLON
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 declarations $@3 . _BEGIN commands END
 
-    SEMICOLON  shift, and go to state 70
+    _BEGIN  shift, and go to state 78
 
 
 State 60
 
-    3 main: PROGRAM IS VAR declarations _BEGIN commands END .
+   22 command: READ identifier SEMICOLON .
 
-    $default  reduce using rule 3 (main)
+    $default  reduce using rule 22 (command)
 
 
 State 61
 
-    5 commands: commands . command
-    9 command: IF condition THEN commands . $@1 ELSE commands ENDIF
-   10        | IF condition THEN commands . ENDIF
+   23 command: WRITE value SEMICOLON .
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    ENDIF        shift, and go to state 71
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    $default  reduce using rule 8 ($@1)
-
-    command     go to state 34
-    $@1         go to state 72
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    $default  reduce using rule 23 (command)
 
 
 State 62
 
-   26 condition: value EQ value .
+   16 command: IF condition THEN . commands $@6 ELSE commands ENDIF
+   17        | IF condition THEN . commands ENDIF
 
-    $default  reduce using rule 26 (condition)
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    commands    go to state 79
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 63
 
-   27 condition: value NE value .
+   37 condition: value EQ . value
 
-    $default  reduce using rule 27 (condition)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    value       go to state 80
+    identifier  go to state 43
 
 
 State 64
 
-   28 condition: value LT value .
+   38 condition: value NE . value
 
-    $default  reduce using rule 28 (condition)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    value       go to state 81
+    identifier  go to state 43
 
 
 State 65
 
-   29 condition: value GT value .
+   39 condition: value LT . value
 
-    $default  reduce using rule 29 (condition)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    value       go to state 82
+    identifier  go to state 43
 
 
 State 66
 
-   30 condition: value LE value .
+   40 condition: value GT . value
 
-    $default  reduce using rule 30 (condition)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    value       go to state 83
+    identifier  go to state 43
 
 
 State 67
 
-   31 condition: value GE value .
+   41 condition: value LE . value
 
-    $default  reduce using rule 31 (condition)
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    value       go to state 84
+    identifier  go to state 43
 
 
 State 68
 
-    5 commands: commands . command
-   11 command: WHILE condition DO commands . ENDWHILE
+   42 condition: value GE . value
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    ENDWHILE     shift, and go to state 73
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
 
-    command     go to state 34
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    value       go to state 85
+    identifier  go to state 43
 
 
 State 69
 
-   13 command: REPEAT $@2 commands UNTIL . condition SEMICOLON
+   18 command: WHILE condition DO . commands ENDWHILE
 
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
 
-    condition   go to state 74
-    value       go to state 30
-    identifier  go to state 28
+    commands    go to state 86
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 70
 
-    7 command: identifier ASSIGN expression SEMICOLON .
+   12 commands: commands . command
+   20 command: REPEAT $@7 commands . UNTIL condition SEMICOLON
 
-    $default  reduce using rule 7 (command)
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    UNTIL        shift, and go to state 87
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
 
 
 State 71
 
-   10 command: IF condition THEN commands ENDIF .
+   32 expression: value PLUS value .
 
-    $default  reduce using rule 10 (command)
+    $default  reduce using rule 32 (expression)
 
 
 State 72
 
-    9 command: IF condition THEN commands $@1 . ELSE commands ENDIF
+   33 expression: value MINUS value .
 
-    ELSE  shift, and go to state 75
+    $default  reduce using rule 33 (expression)
 
 
 State 73
 
-   11 command: WHILE condition DO commands ENDWHILE .
+   34 expression: value MUL value .
 
-    $default  reduce using rule 11 (command)
+    $default  reduce using rule 34 (expression)
 
 
 State 74
 
-   13 command: REPEAT $@2 commands UNTIL condition . SEMICOLON
+   35 expression: value DIV value .
 
-    SEMICOLON  shift, and go to state 76
+    $default  reduce using rule 35 (expression)
 
 
 State 75
 
-    9 command: IF condition THEN commands $@1 ELSE . commands ENDIF
+   36 expression: value MODULO value .
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
-
-    commands    go to state 77
-    command     go to state 20
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    $default  reduce using rule 36 (expression)
 
 
 State 76
 
-   13 command: REPEAT $@2 commands UNTIL condition SEMICOLON .
+   14 command: identifier ASSIGN expression . SEMICOLON
 
-    $default  reduce using rule 13 (command)
+    SEMICOLON  shift, and go to state 88
 
 
 State 77
 
-    5 commands: commands . command
-    9 command: IF condition THEN commands $@1 ELSE commands . ENDIF
+   10 main: PROGRAM IS VAR $@4 declarations _BEGIN . $@5 commands END
 
-    READ         shift, and go to state 12
-    WRITE        shift, and go to state 13
-    IF           shift, and go to state 14
-    ENDIF        shift, and go to state 78
-    WHILE        shift, and go to state 15
-    REPEAT       shift, and go to state 16
-    INT          shift, and go to state 17
-    PIDENTIFIER  shift, and go to state 18
+    $default  reduce using rule 9 ($@5)
 
-    command     go to state 34
-    expression  go to state 21
-    value       go to state 22
-    identifier  go to state 23
+    $@5  go to state 89
 
 
 State 78
 
-    9 command: IF condition THEN commands $@1 ELSE commands ENDIF .
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 declarations $@3 _BEGIN . commands END
 
-    $default  reduce using rule 9 (command)
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    commands    go to state 90
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 79
+
+   12 commands: commands . command
+   16 command: IF condition THEN commands . $@6 ELSE commands ENDIF
+   17        | IF condition THEN commands . ENDIF
+
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    ENDIF        shift, and go to state 91
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    $default  reduce using rule 15 ($@6)
+
+    command     go to state 49
+    $@6         go to state 92
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 80
+
+   37 condition: value EQ value .
+
+    $default  reduce using rule 37 (condition)
+
+
+State 81
+
+   38 condition: value NE value .
+
+    $default  reduce using rule 38 (condition)
+
+
+State 82
+
+   39 condition: value LT value .
+
+    $default  reduce using rule 39 (condition)
+
+
+State 83
+
+   40 condition: value GT value .
+
+    $default  reduce using rule 40 (condition)
+
+
+State 84
+
+   41 condition: value LE value .
+
+    $default  reduce using rule 41 (condition)
+
+
+State 85
+
+   42 condition: value GE value .
+
+    $default  reduce using rule 42 (condition)
+
+
+State 86
+
+   12 commands: commands . command
+   18 command: WHILE condition DO commands . ENDWHILE
+
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    ENDWHILE     shift, and go to state 93
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 87
+
+   20 command: REPEAT $@7 commands UNTIL . condition SEMICOLON
+
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 40
+
+    condition   go to state 94
+    value       go to state 45
+    identifier  go to state 43
+
+
+State 88
+
+   14 command: identifier ASSIGN expression SEMICOLON .
+
+    $default  reduce using rule 14 (command)
+
+
+State 89
+
+   10 main: PROGRAM IS VAR $@4 declarations _BEGIN $@5 . commands END
+
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    commands    go to state 95
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 90
+
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 declarations $@3 _BEGIN commands . END
+   12 commands: commands . command
+
+    END          shift, and go to state 96
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 91
+
+   17 command: IF condition THEN commands ENDIF .
+
+    $default  reduce using rule 17 (command)
+
+
+State 92
+
+   16 command: IF condition THEN commands $@6 . ELSE commands ENDIF
+
+    ELSE  shift, and go to state 97
+
+
+State 93
+
+   18 command: WHILE condition DO commands ENDWHILE .
+
+    $default  reduce using rule 18 (command)
+
+
+State 94
+
+   20 command: REPEAT $@7 commands UNTIL condition . SEMICOLON
+
+    SEMICOLON  shift, and go to state 98
+
+
+State 95
+
+   10 main: PROGRAM IS VAR $@4 declarations _BEGIN $@5 commands . END
+   12 commands: commands . command
+
+    END          shift, and go to state 99
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 96
+
+    5 procedures: procedures PROCEDURE proc_head IS VAR $@2 declarations $@3 _BEGIN commands END .
+
+    $default  reduce using rule 5 (procedures)
+
+
+State 97
+
+   16 command: IF condition THEN commands $@6 ELSE . commands ENDIF
+
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    commands    go to state 100
+    command     go to state 30
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 98
+
+   20 command: REPEAT $@7 commands UNTIL condition SEMICOLON .
+
+    $default  reduce using rule 20 (command)
+
+
+State 99
+
+   10 main: PROGRAM IS VAR $@4 declarations _BEGIN $@5 commands END .
+
+    $default  reduce using rule 10 (main)
+
+
+State 100
+
+   12 commands: commands . command
+   16 command: IF condition THEN commands $@6 ELSE commands . ENDIF
+
+    READ         shift, and go to state 22
+    WRITE        shift, and go to state 23
+    IF           shift, and go to state 24
+    ENDIF        shift, and go to state 101
+    WHILE        shift, and go to state 25
+    REPEAT       shift, and go to state 26
+    INT          shift, and go to state 27
+    PIDENTIFIER  shift, and go to state 28
+
+    command     go to state 49
+    proc_head   go to state 31
+    expression  go to state 32
+    value       go to state 33
+    identifier  go to state 34
+
+
+State 101
+
+   16 command: IF condition THEN commands $@6 ELSE commands ENDIF .
+
+    $default  reduce using rule 16 (command)

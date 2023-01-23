@@ -18,6 +18,7 @@ int line = 1;
 %%
 
 ","   { return COMMA; }
+"PROCEDURE" { return PROCEDURE; }
 "PROGRAM"   { return PROGRAM; }
 "IS"   { return IS; }
 "VAR"   { return VAR; }
@@ -47,6 +48,9 @@ int line = 1;
 
 ":="                { return ASSIGN; }
 
+"("                 { return LBRACKET; }
+")"                 { return RBRACKET; }
+
 "="                 { return EQ; }
 "!="                { return NE; }
 "<"                 { return LT; }
@@ -58,9 +62,9 @@ int line = 1;
 
 [a-zA-Z]+ { yylval.str = new std::string(yytext); return PIDENTIFIER; }
 
-[0-9]+ { yylval.num = std::stoi(yytext); return INT; }
+[0-9]+ { yylval.num = std::stoll(yytext); return INT; }
 
-[ \r\t\n]           ;
+[.+ \r\t\n]           ;
 
 "//".*  { /* ignore rest of the line */ }
 

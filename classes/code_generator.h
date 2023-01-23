@@ -18,7 +18,8 @@ struct IfElseParam {
     Command* jump;
 };
 
-struct ProceduresParam {
+struct ProcedureStruct {
+    Var* var;
     int startMainPtr;
 };
 
@@ -26,6 +27,8 @@ class code_generator {
     public:
         code_generator(var_map* var_map_instance) : operations(*this), conditions(*this), flowControler(*this) {
             this->var_map_instance = var_map_instance;
+            this->commands.push_back(new Command(JUMP, ""));
+            this->var_map_instance->setCommandsVector(&this->commands);
         };
         void readVariable(Var* variable);
         void writeVariable(Var* variable);
@@ -40,6 +43,23 @@ class code_generator {
         int getK();
 
         int getLatestMemoryPoint();
+
+        void finishProceduresDeclaration(int k);
+
+        ProcedureStruct declareProcedure(std::string name);
+
+        void finishProcedureDeclaration();
+
+        void startProcedureDeclaration();
+
+        void finishProcedure();
+
+        ProcedureStruct getProcedure();
+
+        void jumpToStartProcedure();
+
+        std::string currentProcedureName;
+
 
     class Operations {
     public:

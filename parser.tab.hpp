@@ -54,34 +54,37 @@ extern int yydebug;
     VAR = 260,
     _BEGIN = 261,
     END = 262,
-    READ = 263,
-    WRITE = 264,
-    IF = 265,
-    THEN = 266,
-    ELSE = 267,
-    ENDIF = 268,
-    WHILE = 269,
-    DO = 270,
-    ENDWHILE = 271,
-    ASSIGN = 272,
-    COMMA = 273,
-    REPEAT = 274,
-    UNTIL = 275,
-    INVALIDCHAR = 276,
-    SEMICOLON = 277,
-    EQ = 278,
-    NE = 279,
-    LT = 280,
-    GT = 281,
-    LE = 282,
-    GE = 283,
-    PLUS = 284,
-    MINUS = 285,
-    MUL = 286,
-    DIV = 287,
-    MODULO = 288,
-    INT = 289,
-    PIDENTIFIER = 290
+    LBRACKET = 263,
+    RBRACKET = 264,
+    READ = 265,
+    WRITE = 266,
+    IF = 267,
+    THEN = 268,
+    ELSE = 269,
+    ENDIF = 270,
+    WHILE = 271,
+    DO = 272,
+    ENDWHILE = 273,
+    ASSIGN = 274,
+    COMMA = 275,
+    REPEAT = 276,
+    UNTIL = 277,
+    INVALIDCHAR = 278,
+    SEMICOLON = 279,
+    PROCEDURE = 280,
+    EQ = 281,
+    NE = 282,
+    LT = 283,
+    GT = 284,
+    LE = 285,
+    GE = 286,
+    PLUS = 287,
+    MINUS = 288,
+    MUL = 289,
+    DIV = 290,
+    MODULO = 291,
+    INT = 292,
+    PIDENTIFIER = 293
   };
 #endif
 
@@ -91,13 +94,14 @@ union YYSTYPE
 {
 #line 22 "parser.ypp"
 
-    int num;
+    uint64_t num;
     std::string* str;
     Var* variable;
     Condition cond;
     IfElseParam ifElse;
+    ProcedureStruct procedureParam;
 
-#line 101 "parser.tab.hpp"
+#line 105 "parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
