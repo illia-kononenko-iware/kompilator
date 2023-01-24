@@ -42,11 +42,9 @@ class code_generator {
 
         int getK();
 
-        int getLatestMemoryPoint();
+        int getMemoryPointerForConst();
 
         void finishProceduresDeclaration(int k);
-
-        ProcedureStruct declareProcedure(std::string name);
 
         void finishProcedureDeclaration();
 
@@ -128,6 +126,7 @@ class code_generator {
         Operations operations;
         Conditions conditions;
         FlowControler flowControler;
+        int memory_pointer_for_const = 99990;
 };
 
 #endif

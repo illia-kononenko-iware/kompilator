@@ -70,21 +70,22 @@ extern int yydebug;
     REPEAT = 276,
     UNTIL = 277,
     INVALIDCHAR = 278,
-    SEMICOLON = 279,
-    PROCEDURE = 280,
-    EQ = 281,
-    NE = 282,
-    LT = 283,
-    GT = 284,
-    LE = 285,
-    GE = 286,
-    PLUS = 287,
-    MINUS = 288,
-    MUL = 289,
-    DIV = 290,
-    MODULO = 291,
-    INT = 292,
-    PIDENTIFIER = 293
+    INFCOMMENT = 279,
+    SEMICOLON = 280,
+    PROCEDURE = 281,
+    EQ = 282,
+    NE = 283,
+    LT = 284,
+    GT = 285,
+    LE = 286,
+    GE = 287,
+    PLUS = 288,
+    MINUS = 289,
+    MUL = 290,
+    DIV = 291,
+    MODULO = 292,
+    INT = 293,
+    PIDENTIFIER = 294
   };
 #endif
 
@@ -101,7 +102,7 @@ union YYSTYPE
     IfElseParam ifElse;
     ProcedureStruct procedureParam;
 
-#line 105 "parser.tab.hpp"
+#line 106 "parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -17,16 +17,24 @@ void var_map::setProcedureName() {
     Var* new_varInstance = new Var(name, this->memory_pointer, false );
     this->variables[name] = new_varInstance;
     this->memory_pointer++;
+    while (this->memory_pointer > 99990 && this->memory_pointer < 99999) {
+        this->memory_pointer++;
+    }
     this->getCurrentProcedure()->setJumpVariable(new_varInstance);
 }
 
 void var_map::setVariable(std::string name) {
     if (this->isCallingArguments()) {
 
-        std::cout << "Var name:" << name << std::endl;
+        // std::cout << "Var name:" << name << std::endl;
 
         Var* var = this->getVariable(name);
-        this->commands->push_back(new Command( SET, var->getAddressAsString() ) );
+
+        if (var->isParameter()) {
+            this->commands->push_back(new Command( LOAD, var->getAddressAsString() ) );
+        } else {
+            this->commands->push_back(new Command( SET, var->getAddressAsString() ) );
+        }
 
         int currentParamIndex = this->getCurrentProcedure()->getCurrentParameterIndex();
 
@@ -56,10 +64,16 @@ void var_map::setVariable(std::string name) {
 }
 
 void var_map::callProcedure(std::string name) {
+    // std::cout << "- Procedure ( " << name << " )\n";
     if (!this->isCallingArguments()) {
+        // std::cout << "-- Procedure creation ( " << name << " )\n";
         this->setProcedure(name);
+    } else {
+        // std::cout << "--- Call procedure ( " << name << " )\n";
     }
+
     this->setCurrentProcedure(name);
+    // std::cout << this->getCurrentProcedure()->getAddress();
 }
 
 ProcedureClass* var_map::getProcedure(std::string name) {

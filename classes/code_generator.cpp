@@ -12,17 +12,21 @@ void code_generator::writeVariable(Var* variable) {
         this->commands.push_back(new Command(SET, std::to_string(variable->getConstValue())));
         this->commands.push_back(new Command(PUT, "0"));
     } else {
-        this->commands.push_back(new Command(PUT, std::to_string(variable->getAddress())));
+        if (variable->isParameter()) {
+            this->commands.push_back(new Command(LOADI, std::to_string(variable->getAddress())));
+            this->commands.push_back(new Command(PUT, "0" ));
+        } else {
+            this->commands.push_back(new Command(PUT, std::to_string(variable->getAddress())));
+        }
     }
 }
 
 std::string* code_generator::loadVar(Var* variable) {
     if (variable->isConstant()) {
-        // std::cout << "\nvariable->getConstValue() = " << variable->getConstValue() << std::endl;
         this->commands.push_back(new Command(SET, std::to_string(variable->getConstValue())));
         return new std::string("0");
     } else {
-        std::cout << "Inside load var " << variable->getAddress() << " - " << variable->isParameter() << std::endl;
+        // std::cout << "Inside load var " << variable->getAddress() << " - " << variable->isParameter() << std::endl;
         
         if (variable->isParameter()) {
             this->commands.push_back(new Command(LOADI, std::to_string(variable->getAddress())));
@@ -71,19 +75,12 @@ int code_generator::getK() {
 }
 
 
-int code_generator::getLatestMemoryPoint() {
-    return this->var_map_instance->memory_pointer;
-}
-
-ProcedureStruct code_generator::declareProcedure(std::string name) {
-    std::cout << name << std::endl;
-    // Procedure result_procedure;
-    // result_procedure.startMainPtr = this->getK();
-    // return result_procedure;
+int code_generator::getMemoryPointerForConst() {
+    return this->memory_pointer_for_const;
 }
 
 void code_generator::finishProcedureDeclaration() {
-    std::cout << "After declarations\n"; 
+    // std::cout << "After declarations\n"; 
     var_map_instance->startCreatingParameters();
     var_map_instance->startCallingArguments();
     this->currentProcedureName = var_map_instance->getCurrentProcedure()->getName();
@@ -101,16 +98,14 @@ void code_generator::finishProcedure() {
     this->commands.push_back(new Command(JUMPI, this->var_map_instance->getCurrentProcedure()->getJumpVariable()->getAddressAsString()  ));
 }
 
-ProcedureStruct code_generator::getProcedure() {
-    ProcedureStruct result_procedure;
-    return result_procedure;
-}
-
 void code_generator::jumpToStartProcedure() {
-    // if (this->currentProcedureName != this->var_map_instance->getCurrentProcedure()->getName()) {
-    //     this->var_map_instance->setCurrentProcedure(this->currentProcedureName);
-    // }
+    std::string jumpToProcedure = this->var_map_instance->getCurrentProcedure()->getAddressAsString();
+    std::string storeToProcedure = this->var_map_instance->getCurrentProcedure()->getJumpVariable()->getAddressAsString();
+    if (this->currentProcedureName != this->var_map_instance->getCurrentProcedure()->getName()) {
+        this->var_map_instance->setCurrentProcedure(this->currentProcedureName);
+    }
+
     this->commands.push_back(new Command(SET, std::to_string(this->getK() + 3 ) ));
-    this->commands.push_back(new Command(STORE, this->var_map_instance->getCurrentProcedure()->getJumpVariable()->getAddressAsString()  ));
-    this->commands.push_back(new Command(JUMP, this->var_map_instance->getCurrentProcedure()->getAddressAsString()  ));
+    this->commands.push_back(new Command(STORE, storeToProcedure ));
+    this->commands.push_back(new Command(JUMP, jumpToProcedure ));
 }

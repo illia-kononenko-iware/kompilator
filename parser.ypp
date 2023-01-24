@@ -40,7 +40,7 @@
 %token COMMA
 %token <num> REPEAT
 %token UNTIL
-%token INVALIDCHAR
+%token INVALIDCHAR INFCOMMENT
 %token SEMICOLON
 %token PROCEDURE
 
@@ -69,7 +69,9 @@ procedures:
     proc_head IS VAR            { var_map_instance->stopCreatingParameters(); }
     declarations                { code_generator_instance->finishProcedureDeclaration(); }
     _BEGIN commands END         { code_generator_instance->finishProcedure(); $$ = code_generator_instance->getK(); }
-    | procedures PROCEDURE proc_head IS _BEGIN commands END                      { $$ = code_generator_instance->getK(); }
+    | procedures PROCEDURE                  
+    proc_head IS                            { var_map_instance->stopCreatingParameters(); code_generator_instance->finishProcedureDeclaration(); }
+    _BEGIN commands END                      { code_generator_instance->finishProcedure(); $$ = code_generator_instance->getK(); }
     |                                                                           { $$ = code_generator_instance->getK(); }
 ;
 
@@ -93,15 +95,15 @@ command:
     |   WHILE condition DO commands ENDWHILE            { code_generator_instance->flowControl()->whileLoop($2); }
     |   REPEAT                                                { $1 = code_generator_instance->flowControl()->repeatUntil_Start(); }
         commands UNTIL condition SEMICOLON                      { code_generator_instance->flowControl()->repeatUntil_End($5, $1); }                   
-    |   proc_head                                                       { code_generator_instance->jumpToStartProcedure(); }
+    |   proc_head  SEMICOLON                                                     { code_generator_instance->jumpToStartProcedure(); var_map_instance->startCallingArguments(); }
     |   READ identifier SEMICOLON                                       { code_generator_instance->readVariable($2); }   
     |   WRITE value SEMICOLON                                           { code_generator_instance->writeVariable($2); }
     |   expression                       
 ;
 
 proc_head:
-    PIDENTIFIER                                 { std::cout << "Calling proc_head " << *$1 << std::endl; var_map_instance->callProcedure(*$1); } 
-    LBRACKET declarations RBRACKET          { std::cout << "End of calling proc_head\n"; var_map_instance->stopCallingArguments(); std::cout << "End of calling proc_head 2\n"; }                          
+    PIDENTIFIER                                 {  var_map_instance->callProcedure(*$1); } 
+    LBRACKET declarations RBRACKET          { var_map_instance->stopCallingArguments();  }                          
 ;
 
 declarations:

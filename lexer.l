@@ -15,9 +15,11 @@ void yyerror(char *s);
 int line = 1;
 %}
 
+%s COMMENT
 %%
 
-","   { return COMMA; }
+<INITIAL>{
+
 "PROCEDURE" { return PROCEDURE; }
 "PROGRAM"   { return PROGRAM; }
 "IS"   { return IS; }
@@ -58,19 +60,32 @@ int line = 1;
 "<="                { return LE; }
 ">="                { return GE; }
 
+","   { return COMMA; }
 ";"                 { return SEMICOLON; }
+
+"["                 { BEGIN(COMMENT); }
 
 [a-zA-Z]+ { yylval.str = new std::string(yytext); return PIDENTIFIER; }
 
 [0-9]+ { yylval.num = std::stoll(yytext); return INT; }
 
-[.+ \r\t\n]           ;
+[ \r\t\n]           ;
 
 "//".*  { /* ignore rest of the line */ }
+
+\[.+\]  {  }
 
 "\n"  { line++; }
 
 . { return INVALIDCHAR; }
+
+}
+
+<COMMENT>{
+[^\]]               ;
+"]"                 { BEGIN(INITIAL); }
+}
+
 
 %%
 

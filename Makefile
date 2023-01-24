@@ -24,3 +24,6 @@ command.o: classes/command.cpp classes/command.h
 
 var_map.o: classes/var_map.cpp classes/var_map.h
 	g++ -g3 -c classes/var_map.cpp -o var_map.o
+
+clean:
+	rm -f parser.tab.* lex.* *.o

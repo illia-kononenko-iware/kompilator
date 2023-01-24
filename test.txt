@@ -1,21 +1,12 @@
 PROGRAM IS
-VAR
-    a, b, c, d,
-    n, m
+VAR n,k,w
 BEGIN
-    a := 4294967297;
-    b := 4294967298;
-    c := 4294967299;
-    d := 4294967300;
-
-    n := a * b;
-    n := n * c;
-    n := n * d;
-    WRITE n;
-
-    n := a * d;
-    m := b * c;
-    n := n * m;
-    WRITE n;
-
+    n := 15478;
+    k := 16;
+    w := n % k;
+    WRITE w;
+    w := n / k;
+    WRITE w;
+    w := n * k;
+    WRITE w;
 END
