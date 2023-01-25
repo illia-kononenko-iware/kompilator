@@ -2,36 +2,49 @@
 
 // finish all constants and variables from both sides
 
+void code_generator::Conditions::addCommand(CMD name, std::string param = "") {
+    if (param == "") {
+        this->codeGen.commands.push_back( new Command( name ) );
+    } else {
+        this->codeGen.commands.push_back( new Command( name, param ) );
+    }
+}
+
+void code_generator::Conditions::addPreparedCommand(Command *command) {
+    this->codeGen.commands.push_back( command );
+}
+
 Condition code_generator::Conditions::greater(Var* var1, Var* var2) {
     
     int beforeCondPtr = this->codeGen.commands.size();
 
     Command* falseJump = new Command(JZERO, "");
 
-    std::string var2Address = std::to_string(var2->getAddress());
+    std::string var2Address = var2->getAddressAsString();
 
-    if (var2->isConstant()) {
-        int constAddress = this->codeGen.getMemoryPointerForConst();
+    if ( var2->isConstant() ) {
+        std::string constAddress = std::to_string( this->codeGen.getMemoryPointerForConst() );
 
-        this->codeGen.commands.push_back(new Command(SET, 
-            var2->getConstValueAsString()
-        ));
+        this->addCommand( SET, var2->getConstValueAsString() );
+
+        this->addCommand( STORE, constAddress );
         
-        this->codeGen.commands.push_back(new Command(STORE, 
-            std::to_string(constAddress)
-        ));
-
-        var2Address = std::to_string(constAddress);
+        var2Address = constAddress;
     } 
     
-    if (var1->isConstant()) {
-        this->codeGen.commands.push_back(new Command(SET, std::to_string(var1->getConstValue())));
+    if ( var1->isConstant() ) {
+        this->addCommand( SET, var1->getConstValueAsString() );
     } else {
-        this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var1->getAddress())));
+        this->addPreparedCommand( var1->getLoadCommand() );
     }
 
-    this->codeGen.commands.push_back(new Command(SUB, var2Address ));
-    this->codeGen.commands.push_back(falseJump);
+    if ( var2->isParameter() ) {
+        this->addPreparedCommand( var2->getSubCommand() );
+    } else {
+        this->addCommand( SUB, var2Address );
+    }
+
+    this->addPreparedCommand( falseJump );
 
     int afterCondPtr = this->codeGen.commands.size();
 
@@ -55,30 +68,31 @@ Condition code_generator::Conditions::greaterOrEqual(Var* var1, Var* var2) {
 
     Command* falseJump = new Command(JPOS, "");
 
-    std::string var1Address = std::to_string(var1->getAddress());
+    std::string var1Address = var1->getAddressAsString();
 
-     if (var1->isConstant()) {
-        int constAddress = this->codeGen.getMemoryPointerForConst();
+     if ( var1->isConstant() ) {
+        std::string constAddress = std::to_string( this->codeGen.getMemoryPointerForConst() );
 
-        this->codeGen.commands.push_back(new Command(SET, 
-            var1->getConstValueAsString()
-        ));
+        this->addCommand( SET, var1->getConstValueAsString() );
+
+        this->addCommand( STORE, constAddress );
         
-        this->codeGen.commands.push_back(new Command(STORE, 
-            std::to_string(constAddress)
-        ));  
-        
-        var1Address = std::to_string(constAddress);
+        var1Address = constAddress;
     } 
 
-    if (var2->isConstant()) {
-        this->codeGen.commands.push_back(new Command(SET, std::to_string(var2->getConstValue())));
+    if ( var2->isConstant() ) {
+        this->addCommand( SET, var2->getConstValueAsString() );
     } else {
-        this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var2->getAddress())));
+        this->addPreparedCommand( var2->getLoadCommand() );
     }
 
-    this->codeGen.commands.push_back(new Command(SUB, var1Address));
-    this->codeGen.commands.push_back(falseJump);
+    if ( var1->isParameter() ) {
+        this->addPreparedCommand( var1->getSubCommand() );
+    } else {
+        this->addCommand( SUB, var1Address );
+    }
+
+    this->addPreparedCommand( falseJump );
 
     int afterCondPtr = this->codeGen.commands.size();
 
@@ -103,30 +117,32 @@ Condition code_generator::Conditions::less(Var* var1, Var* var2) {
 
     Command* falseJump = new Command(JZERO, "");
 
-    std::string var1Address = std::to_string(var1->getAddress());
+    std::string var1Address = var1->getAddressAsString();
 
-    if (var1->isConstant()) {
-        int constAddress = this->codeGen.getMemoryPointerForConst();
+    if ( var1->isConstant() ) {
+        
+        std::string constAddress = std::to_string( this->codeGen.getMemoryPointerForConst() );
 
-        this->codeGen.commands.push_back(new Command(SET, 
-            var1->getConstValueAsString()
-        ));
+        this->addCommand( SET, var1->getConstValueAsString() );
         
-        this->codeGen.commands.push_back(new Command(STORE, 
-            std::to_string(constAddress)
-        ));  
+        this->addCommand( STORE, constAddress );
         
-        var1Address = std::to_string(constAddress);
+        var1Address = constAddress;
     } 
 
-    if (var2->isConstant()) {
-        this->codeGen.commands.push_back(new Command(SET, std::to_string(var2->getConstValue())));
+    if ( var2->isConstant() ) {
+        this->addCommand( SET, var2->getConstValueAsString() );
     } else {
-        this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var2->getAddress())));
+        this->addPreparedCommand( var2->getLoadCommand() );
     }
 
-    this->codeGen.commands.push_back(new Command(SUB, var1Address ));
-    this->codeGen.commands.push_back(falseJump);
+    if ( var1->isParameter() ) {
+        this->addPreparedCommand( var1->getSubCommand() );
+    } else {
+        this->addCommand( SUB, var1Address );
+    }
+
+    this->addPreparedCommand( falseJump );
 
     int afterCondPtr = this->codeGen.commands.size();
 
@@ -150,30 +166,31 @@ Condition code_generator::Conditions::lessOrEqual(Var* var1, Var* var2) {
 
     Command* falseJump = new Command(JPOS, "");
 
-    std::string var2Address = std::to_string(var2->getAddress());
+    std::string var2Address = var2->getAddressAsString();
 
-    if (var2->isConstant()) {
-        int constAddress = this->codeGen.getMemoryPointerForConst();
+    if ( var2->isConstant() ) {
 
-        this->codeGen.commands.push_back(new Command(SET, 
-            var2->getConstValueAsString()
-        ));
-        
-        this->codeGen.commands.push_back(new Command(STORE, 
-            std::to_string(constAddress)
-        ));
+        std::string constAddress = std::to_string( this->codeGen.getMemoryPointerForConst() );
 
-        var2Address = std::to_string(constAddress);
+        this->addCommand( SET, var2->getConstValueAsString() );
+        this->addCommand( STORE, constAddress );        
+        var2Address = constAddress;
+
     } 
 
-    if (var1->isConstant()) {
-        this->codeGen.commands.push_back(new Command(SET, std::to_string(var1->getConstValue())));
+    if ( var1->isConstant() ) {
+        this->addCommand( SET, var1->getConstValueAsString() );
     } else {
-        this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var1->getAddress())));
+        this->addPreparedCommand( var1->getLoadCommand() );
     }
 
-    this->codeGen.commands.push_back(new Command(SUB, var2Address ));
-    this->codeGen.commands.push_back(falseJump);
+    if ( var2->isParameter() ) {
+        this->addPreparedCommand( var2->getSubCommand() );
+    } else {
+        this->addCommand( SUB, var2Address );
+    }
+
+    this->addPreparedCommand( falseJump );
 
     int afterCondPtr = this->codeGen.commands.size();
 
@@ -194,39 +211,97 @@ Condition code_generator::Conditions::lessOrEqual(Var* var1, Var* var2) {
 
 Condition code_generator::Conditions::equal(Var* var1, Var* var2) {
 
+    std::string var1Address = var1->getAddressAsString();
+    std::string var2Address = var2->getAddressAsString();
+
     int beforeCondPtr = this->codeGen.commands.size();
 
-    Command* firstCheckFalseJump = new Command(JPOS, "");
+    Command* falseJump = new Command(JPOS, "");
 
-    Command* falseJump;
+    if ( var1->isConstant() ) {
 
-    int var1_value;
-    int var2_value;
+        if ( var1->getConstValue() == 0 ) {
+            falseJump = new Command( JPOS, "" );
 
-    if (var2->isConstant()) {
-        var1_value = var1->getConstValue();
-        if (var1_value == 0) {
-            falseJump = new Command(JPOS, "");
-            this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var1->getAddress())));
-            this->codeGen.commands.push_back(falseJump);
+            this->addPreparedCommand( var2->getLoadCommand() );
+            this->addPreparedCommand( falseJump );
+
+            int afterCondPtr = this->codeGen.commands.size();
+
+            Condition condition_instance{
+            .beforeCondPtr = beforeCondPtr,
+            .afterCondPtr = afterCondPtr,
+            .afterTrueJumpPtr = 0,
+            .falseJump = falseJump
+            };
+
+            return condition_instance;
         }
-    } else {
-        falseJump = new Command(JPOS, "");
 
-        // jesli X - Y > 0 czyli X > Y( != 0 ) to mamy falseJump i nie dzialamy (dalej nie sprawdzamy i po prostu skoczemy do warunku falseJump)
-        this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var1->getAddress())));
-        this->codeGen.commands.push_back(new Command(SUB, std::to_string(var2->getAddress())));
+        std::string constAddress = std::to_string( this->codeGen.getMemoryPointerForConst() );
+
+        this->addCommand( SET, var1->getConstValueAsString() );
+        this->addCommand( STORE, constAddress );        
+        var1Address = constAddress;
         
-        firstCheckFalseJump->setParam(std::to_string(this->codeGen.commands.size() + 3));
+    } 
 
-        this->codeGen.commands.push_back(firstCheckFalseJump);
-        // teraz x nie moze byc wiekszy od y bo nie przepuscilo by dalej w poprzednim warunku
-        // jesli Y - X > 0 czyli Y > X ( != 0 ) to mamy falseJump i nie dzialamy bo Y okazal sie wiekszy za X
-        this->codeGen.commands.push_back(new Command(LOAD, std::to_string(var2->getAddress())));
-        this->codeGen.commands.push_back(new Command(SUB, std::to_string(var1->getAddress())));
-        this->codeGen.commands.push_back(falseJump);
+    if ( var2->isConstant() ) {
+            
+        if ( var2->getConstValue() == 0 ) {
+            falseJump = new Command( JPOS, "" );
+
+            this->addPreparedCommand( var1->getLoadCommand() );
+            this->addPreparedCommand( falseJump );
+
+            int afterCondPtr = this->codeGen.commands.size();
+
+            Condition condition_instance{
+            .beforeCondPtr = beforeCondPtr,
+            .afterCondPtr = afterCondPtr,
+            .afterTrueJumpPtr = 0,
+            .falseJump = falseJump
+            };
+
+            return condition_instance;
+        }
+
+        std::string constAddress = std::to_string( this->codeGen.getMemoryPointerForConst() + 1 );
+
+        this->addCommand( SET, var2->getConstValueAsString() );
+        this->addCommand( STORE, constAddress );        
+        var2Address = constAddress;
+        
     }
 
+    if ( var1->isParameter() ) {
+        this->addPreparedCommand( var1->getLoadCommand() );
+    } else {
+        this->addCommand( LOAD, var1Address );
+    }
+
+    if ( var2->isParameter() ) {
+        this->addPreparedCommand( var2->getSubCommand() );
+    } else {
+        this->addCommand( SUB, var2Address );
+    }
+
+    this->addCommand( JPOS, std::to_string( this->codeGen.getK() + 3 ) );
+    
+    if ( var2->isParameter() ) {
+        this->addPreparedCommand( var2->getLoadCommand() );
+    } else {
+        this->addCommand( LOAD, var2Address );
+    }
+
+    if ( var1->isParameter() ) {
+        this->addPreparedCommand( var1->getSubCommand() );
+    } else {
+        this->addCommand( SUB, var1Address );
+    }
+
+    this->addPreparedCommand( falseJump );
+    
     int afterCondPtr = this->codeGen.commands.size();
 
     // std::cout << "Before condition pointer: " << beforeCondPtr << std::endl;
@@ -247,7 +322,7 @@ Condition code_generator::Conditions::notEqual(Var* var1, Var* var2) {
 
     Condition condition_instance = this->equal(var1, var2);
     condition_instance.falseJump->setParam(
-        std::to_string(this->codeGen.commands.size() + 1)
+        std::to_string( this->codeGen.getK() + 1)
     );
 
     condition_instance.falseJump = new Command(JUMP, "");

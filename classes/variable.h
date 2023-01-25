@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "command.h"
 
 class Var {
     public:
@@ -30,6 +31,38 @@ class Var {
         int getAddress() { return this->address; }
 
         std::string getAddressAsString() { return std::to_string(this->address); }
+
+        Command* getLoadCommand() {
+            if (this->isParameter()) {
+                return new Command( LOADI, this->getAddressAsString() );
+            } else {
+                return new Command( LOAD, this->getAddressAsString() );
+            }
+        }
+
+        Command* getAddCommand() {
+            if (this->isParameter()) {
+                return new Command( ADDI, this->getAddressAsString() );
+            } else {
+                return new Command( ADD, this->getAddressAsString() );
+            }
+        }
+        
+        Command* getSubCommand() {
+            if (this->isParameter()) {
+                return new Command( SUBI, this->getAddressAsString() );
+            } else {
+                return new Command( SUB, this->getAddressAsString() );
+            }
+        }
+
+        Command* getStoreCommand() {
+            if (this->isParameter()) {
+                return new Command( STOREI, this->getAddressAsString() );
+            } else {
+                return new Command( STORE, this->getAddressAsString() );
+            }
+        }
 
         bool isConstant() { return this->isConstant_flag; }
 

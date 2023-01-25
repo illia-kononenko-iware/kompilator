@@ -73,13 +73,16 @@ class code_generator {
         void mul(Var* var1, Var* var2);
         void div(Var* var1, Var* var2);
         void mod(Var* var1, Var* var2);
-
+        void addCommand(CMD name, std::string param);
+        void addPreparedCommand(Command *command);
+        
     private:
         // std::string* mulOneConstant(Constant* constant, Var* var);
         // std::string* divideByConstant(Constant* constant, Var* var);
 
         void mulOneConstant(Var* var, int const_value);
         void divideByConstant(Var* var, int const_value);
+        void modByConstant(Var* var, int const_value);
 
         code_generator& codeGen;
     };
@@ -93,6 +96,8 @@ class code_generator {
             Condition lessOrEqual(Var* var1, Var* var2);
             Condition greater(Var* var1, Var* var2);
             Condition greaterOrEqual(Var* var1, Var* var2);
+            void addCommand(CMD name, std::string param);
+            void addPreparedCommand(Command *command);
 
         private:
             code_generator& codeGen;
@@ -111,6 +116,8 @@ class code_generator {
 
         int repeatUntil_Start();
         void repeatUntil_End(Condition cond, int ptr);
+        void addCommand(CMD name, std::string param);
+        void addPreparedCommand(Command *command);
 
     private:
         code_generator& codeGen;
