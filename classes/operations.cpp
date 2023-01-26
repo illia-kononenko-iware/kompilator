@@ -15,7 +15,23 @@ void code_generator::Operations::addPreparedCommand(Command *command) {
     this->codeGen.commands.push_back( command );
 }
 
+void code_generator::Operations::checkVars(Var* var1, Var* var2) {
+    // std::cout << "Inside check vars " << var1->isInitialized() << std::endl;
+    if ( this->codeGen.getInsideConditionFlag() == false ) {
+        if ( !var1->isInitialized() ) {
+            throw (std::string) "Variable '" + var1->getName() + "' wasn't initialized\n";
+        } 
+        
+        if ( !var2->isInitialized() ) {
+            throw (std::string) "Variable '" + var2->getName() + "' wasn't initialized\n";
+        }
+    }
+}
+
 void code_generator::Operations::add(Var* var1, Var* var2) {
+
+    this->checkVars(var1, var2);
+
     // var1 is number
     if (var1->isConstant()) {
         // and var2 is number
@@ -58,6 +74,9 @@ void code_generator::Operations::add(Var* var1, Var* var2) {
 }
 
 void code_generator::Operations::sub(Var* var1, Var* var2) {
+
+    this->checkVars(var1, var2);
+
     // var1 is number
     if (var1->isConstant()) {
         // and var2 is number
@@ -109,6 +128,8 @@ void code_generator::Operations::sub(Var* var1, Var* var2) {
 }
 
 void code_generator::Operations::mul(Var* var1, Var* var2) {
+    
+    this->checkVars(var1, var2);
 
     if (var2->isConstant()) {
 
@@ -205,6 +226,8 @@ void code_generator::Operations::mulOneConstant(Var* var, int const_value) {
 }
 
 void code_generator::Operations::div(Var* var1, Var* var2) {
+    
+    this->checkVars(var1, var2);
 
     // std::cout << "Inside div";
 
@@ -330,6 +353,9 @@ void code_generator::Operations::divideByConstant(Var* var, int const_value) {
 }
 
 void code_generator::Operations::mod(Var* var1, Var* var2) {
+
+    this->checkVars(var1, var2);
+
     if (var2->isConstant()) {
         if (var1->isConstant()) {
             int result = var1->getConstValue() % var2->getConstValue();

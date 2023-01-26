@@ -54,6 +54,9 @@ public:
     /** */
 
     void setCurrentProcedure(std::string name);
+
+    void setCodeGeneratorCurrentProcedureName(std::string *name);
+
     ProcedureClass* getCurrentProcedure();
 
     std::map<std::string, Var*> variables;
@@ -63,6 +66,7 @@ public:
     bool isCreatingParametersFlag = true;
     bool isCallingArgumentsFlag = false;
     bool isDeclaringProceduresFlag = true;
+    std::string *code_generator_current_procedure_name;
 
     private:
         std::vector<Command*> *commands;

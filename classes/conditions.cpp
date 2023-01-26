@@ -14,7 +14,26 @@ void code_generator::Conditions::addPreparedCommand(Command *command) {
     this->codeGen.commands.push_back( command );
 }
 
+void code_generator::Conditions::checkVars(Var* var1, Var* var2) {
+    if ( !var1->isInitialized() ) {
+        throw (std::string) "Variable '" + var1->getName() + "' wasn't initialized\n";
+    } 
+    
+    if ( !var2->isInitialized() ) {
+        throw (std::string) "Variable '" + var2->getName() + "' wasn't initialized\n";
+    }
+}
+
+void code_generator::Conditions::switchInsideConditionFlag() {
+    this->codeGen.setInsideConditionFlag(true);
+}
+
 Condition code_generator::Conditions::greater(Var* var1, Var* var2) {
+
+    this->switchInsideConditionFlag();
+    
+    this->checkVars(var1, var2);
+
     
     int beforeCondPtr = this->codeGen.commands.size();
 
@@ -64,6 +83,10 @@ Condition code_generator::Conditions::greater(Var* var1, Var* var2) {
 
 Condition code_generator::Conditions::greaterOrEqual(Var* var1, Var* var2) {
     
+    this->switchInsideConditionFlag();
+    
+    this->checkVars(var1, var2);
+
     int beforeCondPtr = this->codeGen.commands.size();
 
     Command* falseJump = new Command(JPOS, "");
@@ -113,6 +136,10 @@ Condition code_generator::Conditions::greaterOrEqual(Var* var1, Var* var2) {
 
 Condition code_generator::Conditions::less(Var* var1, Var* var2) {
     
+    this->switchInsideConditionFlag();
+    
+    this->checkVars(var1, var2);
+
     int beforeCondPtr = this->codeGen.commands.size();
 
     Command* falseJump = new Command(JZERO, "");
@@ -162,6 +189,10 @@ Condition code_generator::Conditions::less(Var* var1, Var* var2) {
 
 Condition code_generator::Conditions::lessOrEqual(Var* var1, Var* var2) {
     
+    this->switchInsideConditionFlag();
+
+    this->checkVars(var1, var2);
+
     int beforeCondPtr = this->codeGen.commands.size();
 
     Command* falseJump = new Command(JPOS, "");
@@ -210,6 +241,10 @@ Condition code_generator::Conditions::lessOrEqual(Var* var1, Var* var2) {
 }
 
 Condition code_generator::Conditions::equal(Var* var1, Var* var2) {
+
+    this->switchInsideConditionFlag();
+
+    this->checkVars(var1, var2);
 
     std::string var1Address = var1->getAddressAsString();
     std::string var2Address = var2->getAddressAsString();
@@ -319,6 +354,10 @@ Condition code_generator::Conditions::equal(Var* var1, Var* var2) {
 }
 
 Condition code_generator::Conditions::notEqual(Var* var1, Var* var2) {
+
+    this->switchInsideConditionFlag();
+
+    this->checkVars(var1, var2);
 
     Condition condition_instance = this->equal(var1, var2);
     condition_instance.falseJump->setParam(

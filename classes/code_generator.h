@@ -29,6 +29,7 @@ class code_generator {
             this->var_map_instance = var_map_instance;
             this->commands.push_back(new Command(JUMP, ""));
             this->var_map_instance->setCommandsVector(&this->commands);
+            this->var_map_instance->setCodeGeneratorCurrentProcedureName(&this->currentProcedureName);
         };
         void readVariable(Var* variable);
         void writeVariable(Var* variable);
@@ -58,6 +59,9 @@ class code_generator {
 
         std::string currentProcedureName;
 
+        void setInsideConditionFlag(bool flag);
+
+        bool getInsideConditionFlag();
 
     class Operations {
     public:
@@ -75,6 +79,7 @@ class code_generator {
         void mod(Var* var1, Var* var2);
         void addCommand(CMD name, std::string param);
         void addPreparedCommand(Command *command);
+        void checkVars(Var* var1, Var* var2);
         
     private:
         // std::string* mulOneConstant(Constant* constant, Var* var);
@@ -98,7 +103,9 @@ class code_generator {
             Condition greaterOrEqual(Var* var1, Var* var2);
             void addCommand(CMD name, std::string param);
             void addPreparedCommand(Command *command);
-
+            void checkVars(Var* var1, Var* var2);
+            void switchInsideConditionFlag();
+            
         private:
             code_generator& codeGen;
     };
@@ -134,6 +141,7 @@ class code_generator {
         Conditions conditions;
         FlowControler flowControler;
         int memory_pointer_for_const = 99990;
+        bool insideConditionFlag = false;
 };
 
 #endif

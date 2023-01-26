@@ -60,7 +60,7 @@ int line = 1;
 "<="                { return LE; }
 ">="                { return GE; }
 
-","   { return COMMA; }
+","                 { return COMMA; }
 ";"                 { return SEMICOLON; }
 
 "["                 { BEGIN(COMMENT); }
@@ -69,15 +69,11 @@ int line = 1;
 
 [0-9]+ { yylval.num = std::stoll(yytext); return INT; }
 
-[ \r\t\n]           ;
-
-"//".*  { /* ignore rest of the line */ }
-
-\[.+\]  {  }
+[ \t]           ;
 
 "\n"  { line++; }
 
-. { return INVALIDCHAR; }
+. { yyerror(yytext); }
 
 }
 

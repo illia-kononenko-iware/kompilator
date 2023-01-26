@@ -78,6 +78,10 @@ class Var {
 
         bool isParameter() { return this->isParameterFlag; }
 
+        std::string getScope() { return this->scopeName; }
+
+        void setScope(std::string name) { this->scopeName = name; }
+
     private:
         std::string name;
         int address;
@@ -85,6 +89,7 @@ class Var {
         bool isConstant_flag;
         bool initialized;
         bool isParameterFlag = false;
+        std::string scopeName = "main";
 };
 
 #endif

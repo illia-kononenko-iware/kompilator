@@ -147,7 +147,7 @@ identifier:
 %%
 
 void yyerror(std::string error) {
-    printf("%s\n", error.c_str());
+    printf("Error: %s\n", error.c_str());
     exit(1);
 }
 
