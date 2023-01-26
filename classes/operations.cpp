@@ -257,9 +257,11 @@ void code_generator::Operations::div(Var* var1, Var* var2) {
     std::string result_address = std::to_string( this->codeGen.getMemoryPointerForConst() + 3 );
 
     this->addPreparedCommand( var1->getLoadCommand() );
+    this->addCommand( JZERO, std::to_string( this->codeGen.getK() + 1 + 34 ) );
     this->addCommand( STORE, a_temp_address );
 
     this->addPreparedCommand( var2->getLoadCommand() );
+    this->addCommand( JZERO, std::to_string( this->codeGen.getK() + 1 + 31 ) );
     this->addCommand( STORE, b_temp_address );
 
     this->addCommand( SET, "0" );
@@ -375,9 +377,11 @@ void code_generator::Operations::mod(Var* var1, Var* var2) {
     std::string result_address = std::to_string( this->codeGen.getMemoryPointerForConst() + 3 );
 
     this->addPreparedCommand( var1->getLoadCommand() );
+    this->addCommand( JZERO, std::to_string( this->codeGen.getK() + 1 + 34 ) );
     this->addCommand( STORE, a_temp_address );
 
     this->addPreparedCommand( var2->getLoadCommand() );
+    this->addCommand( JZERO, std::to_string( this->codeGen.getK() + 1 + 31 ) );
     this->addCommand( STORE, b_temp_address );
 
     this->addCommand( SET, "0" );
@@ -419,7 +423,7 @@ void code_generator::Operations::mod(Var* var1, Var* var2) {
     this->addCommand( STORE, i_address );
 
     this->addCommand( JUMP, std::to_string( this->codeGen.getK() + 1 - 25 ) );
-    this->addCommand( LOAD, a_temp_address );
+    this->addCommand( LOAD, a_temp_address);
 }
 
 void code_generator::Operations::modByConstant(Var* var, int const_value) {
