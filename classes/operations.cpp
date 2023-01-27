@@ -131,25 +131,25 @@ void code_generator::Operations::mul(Var* var1, Var* var2) {
     
     this->checkVars(var1, var2);
 
-    if (var2->isConstant()) {
+    // if (var2->isConstant()) {
 
-        if (var1->isConstant()) {
+    //     if (var1->isConstant()) {
 
-            uint64_t result = var1->getConstValue() * var2->getConstValue();
+    //         uint64_t result = var1->getConstValue() * var2->getConstValue();
 
-            this->addCommand( SET, std::to_string(result) );
+    //         this->addCommand( SET, std::to_string(result) );
 
-            return;
-        }
+    //         return;
+    //     }
 
-        this->mulOneConstant(var1, var2->getConstValue());
-        return;
-    }
+    //     this->mulOneConstant(var1, var2->getConstValue());
+    //     return;
+    // }
 
-    if (var1->isConstant()) {
-        this->mulOneConstant(var2, var1->getConstValue());
-        return;
-    }
+    // if (var1->isConstant()) {
+    //     this->mulOneConstant(var2, var1->getConstValue());
+    //     return;
+    // }
 
     // both are variables
     std::string constAddress1 = std::to_string( this->codeGen.getMemoryPointerForConst());

@@ -33,6 +33,9 @@ class Var {
         std::string getAddressAsString() { return std::to_string(this->address); }
 
         Command* getLoadCommand() {
+            if (this->isConstant()) {
+                return new Command( SET, this->getConstValueAsString() );
+            }
             if (this->isParameter()) {
                 return new Command( LOADI, this->getAddressAsString() );
             } else {

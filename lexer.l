@@ -65,7 +65,7 @@ int line = 1;
 
 "["                 { BEGIN(COMMENT); }
 
-[a-zA-Z]+ { yylval.str = new std::string(yytext); return PIDENTIFIER; }
+[_a-zA-Z]+ { yylval.str = new std::string(yytext); return PIDENTIFIER; }
 
 [0-9]+ { yylval.num = std::stoll(yytext); return INT; }
 

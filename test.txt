@@ -1,33 +1,26 @@
-[ a ^ b mod c
-? 1234567890
-? 1234567890987654321
-? 987654321
-> 674106858
+[ Wymnozenie liczby 340282367713220089251654026161790386200 
+  ze stalych 33-bitowych
+  ( (2^32+1) * (2^32+2) * (2^32+3) * (2^32+4) )
+  na 2 sposoby.
 ]
-PROCEDURE power(a,b,c,d) IS
-VAR pot,wyk,o
-BEGIN
-    d:=1;
-    wyk:=b;
-    pot:=a%c;
-    WHILE wyk>0 DO
-	o:=wyk%2;
-	IF o=1 THEN
-	    d:=d*pot;
-	    d:=d%c;
-	ENDIF
-	wyk:=wyk/2;
-	pot:=pot*pot;
-	pot:=pot%c;
-    ENDWHILE
-END
-
 PROGRAM IS
-VAR a,b,c,d
+VAR
+    a, b, c, d,
+    n, m
 BEGIN
-   READ a;
-   READ b;
-   READ c;
-   power(a,b,c,d);
-   WRITE d;
+    a := 4294967297;
+    b := 4294967298;
+    c := 4294967299;
+    d := 4294967300;
+
+    n := a * b;
+    n := n * c;
+    n := n * d;
+    WRITE n;
+
+    n := a * d;
+    m := b * c;
+    n := n * m;
+    WRITE n;
+
 END
