@@ -7,27 +7,28 @@
 #include "variable.h"
 #include "procedure.h"
 #include "command.h"
+using namespace std;
 
 class var_map {
 public:
     var_map() {
-        this->variables = std::map<std::string, Var*>();
-        this->procedures = std::map<std::string, ProcedureClass*>();
+        this->variables = map<string, Var*>();
+        this->procedures = map<string, ProcedureClass*>();
     }
 
-    void callProcedure(std::string name);
+    void callProcedure(string name);
 
-    Var* getVariable(std::string name);
+    Var* getVariable(string name);
 
-    void setVariable(std::string name);
+    void setVariable(string name);
 
-    ProcedureClass* getProcedure(std::string name);
+    ProcedureClass* getProcedure(string name);
 
-    void setProcedure(std::string name);
+    void setProcedure(string name);
 
     void setProcedureName();
 
-    void setCommandsVector(std::vector<Command*> *commands);
+    void setCommandsVector(vector<Command*> *commands);
 
     Var* getNumberAsVariable(uint64_t value);
 
@@ -45,31 +46,29 @@ public:
 
     bool isCallingArguments();
     
-    /** declaring procedures */
 
     void startDeclaringProcedures();
     void stopDeclaringProcedures();
     bool isDeclaringProcedures();
 
-    /** */
 
-    void setCurrentProcedure(std::string name);
+    void setCurrentProcedure(string name);
 
-    void setCodeGeneratorCurrentProcedureName(std::string *name);
+    void setCodeGeneratorCurrentProcedureName(string *name);
 
     ProcedureClass* getCurrentProcedure();
 
-    std::map<std::string, Var*> variables;
-    std::map<std::string, ProcedureClass*> procedures;
+    map<string, Var*> variables;
+    map<string, ProcedureClass*> procedures;
     int memory_pointer = 1;
     int procedure_pointer = 1;
     bool isCreatingParametersFlag = true;
     bool isCallingArgumentsFlag = false;
     bool isDeclaringProceduresFlag = true;
-    std::string *code_generator_current_procedure_name;
+    string *code_generator_current_procedure_name;
 
     private:
-        std::vector<Command*> *commands;
+        vector<Command*> *commands;
         ProcedureClass *currentProcedure;
 
 };

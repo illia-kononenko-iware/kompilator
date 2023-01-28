@@ -3,15 +3,15 @@
 
 #include <string>
 #include <iostream>
+using namespace std;
 
 class ProcedureClass {
     public:
 
-        ProcedureClass(std::string name, int startAddress) {
-            this->parameters = std::vector<Var*>();
-            this->local_variables = std::map<std::string, Var*>();
+        ProcedureClass(string name, int startAddress) {
+            this->parameters = vector<Var*>();
+            this->local_variables = map<string, Var*>();
 
-            // std::cout << "Inside variable constructor\n";
             this->name = name;
             this->startAddress = startAddress;
         }
@@ -21,18 +21,18 @@ class ProcedureClass {
 
         int getAddress() { return this->startAddress; }
 
-        std::string getAddressAsString() { return std::to_string(this->startAddress); }
+        string getAddressAsString() { return to_string(this->startAddress); }
 
-        std::string getName() { return this->name; }
+        string getName() { return this->name; }
 
-        std::vector<Var*> parameters;
-        std::map<std::string, Var*> local_variables;
+        vector<Var*> parameters;
+        map<string, Var*> local_variables;
 
         int getCurrentParameterIndex() { return this->currentParameterIndex; }
         void incrementCurrentParameterIndex() { this->currentParameterIndex = (this->currentParameterIndex + 1) % this->parameters.size(); }
 
     private:
-        std::string name;
+        string name;
         int startAddress;
         int currentParameterIndex = 0;
         Var* jumpVariable;

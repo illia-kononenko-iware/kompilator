@@ -1,8 +1,9 @@
 #include "command.h"
 #include <map>
 #include <iostream>
+using namespace std;
 
-std::map<CMD, std::string> Command::CMD_to_str = {
+map<CMD, string> Command::CMD_to_str = {
     { GET, "GET" },
     { PUT, "PUT" },
     { LOAD, "LOAD" },
@@ -26,15 +27,15 @@ Command::Command(CMD name) {
     this->name = name;
 }
 
-Command::Command(CMD name, std::string param) {
+Command::Command(CMD name, string param) {
     this->name = name;
     this->parameter = param;
 }
 
-void Command::setParam(std::string param) {
+void Command::setParam(string param) {
     this->parameter = param;
 }
 
-std::string Command::parseToString() {
+string Command::parseToString() {
     return Command::CMD_to_str[this->name] + " " + this->parameter;
 }

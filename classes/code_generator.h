@@ -5,6 +5,7 @@
 #include <map>
 #include "var_map.h"
 #include "command.h"
+using namespace std;
 
 struct Condition {
     int beforeCondPtr;
@@ -18,11 +19,6 @@ struct IfElseParam {
     Command* jump;
 };
 
-struct ProcedureStruct {
-    Var* var;
-    int startMainPtr;
-};
-
 class code_generator {
     public:
         code_generator(var_map* var_map_instance) : operations(*this), conditions(*this), flowControler(*this) {
@@ -34,12 +30,12 @@ class code_generator {
         void readVariable(Var* variable);
         void writeVariable(Var* variable);
 
-        std::string* loadVar(Var* variable);
+        string* loadVar(Var* variable);
 
         void assignValue(Var* variable);
 
         void endGenerateCode();
-        std::string getCode();
+        string getCode();
 
         int getK();
 
@@ -53,11 +49,9 @@ class code_generator {
 
         void finishProcedure();
 
-        ProcedureStruct getProcedure();
-
         void jumpToStartProcedure();
 
-        std::string currentProcedureName;
+        string currentProcedureName;
 
         void setInsideConditionFlag(bool flag);
 
@@ -66,24 +60,17 @@ class code_generator {
     class Operations {
     public:
         Operations(code_generator& code) : codeGen(code) {};
-        // std::string* add(Var* var1, Var* var2);
-        // std::string* sub(Var* var1, Var* var2);
-        // std::string* mul(Var* var1, Var* var2);
-        // std::string* div(Var* var1, Var* var2);
-        // std::string* mod(Var* var1, Var* var2);
 
         void add(Var* var1, Var* var2);
         void sub(Var* var1, Var* var2);
         void mul(Var* var1, Var* var2);
         void div(Var* var1, Var* var2);
         void mod(Var* var1, Var* var2);
-        void addCommand(CMD name, std::string param);
+        void addCommand(CMD name, string param);
         void addPreparedCommand(Command *command);
         void checkVars(Var* var1, Var* var2);
         
     private:
-        // std::string* mulOneConstant(Constant* constant, Var* var);
-        // std::string* divideByConstant(Constant* constant, Var* var);
 
         void mulOneConstant(Var* var, int const_value);
         void divideByConstant(Var* var, int const_value);
@@ -101,7 +88,7 @@ class code_generator {
             Condition lessOrEqual(Var* var1, Var* var2);
             Condition greater(Var* var1, Var* var2);
             Condition greaterOrEqual(Var* var1, Var* var2);
-            void addCommand(CMD name, std::string param);
+            void addCommand(CMD name, string param);
             void addPreparedCommand(Command *command);
             void checkVars(Var* var1, Var* var2);
             void switchInsideConditionFlag();
@@ -123,7 +110,7 @@ class code_generator {
 
         int repeatUntil_Start();
         void repeatUntil_End(Condition cond, int ptr);
-        void addCommand(CMD name, std::string param);
+        void addCommand(CMD name, string param);
         void addPreparedCommand(Command *command);
 
     private:
@@ -136,7 +123,7 @@ class code_generator {
 
     private:
         var_map* var_map_instance;
-        std::vector<Command*> commands;
+        vector<Command*> commands;
         Operations operations;
         Conditions conditions;
         FlowControler flowControler;

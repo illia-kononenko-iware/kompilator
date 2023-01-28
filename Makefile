@@ -1,5 +1,5 @@
 build: lex parse code_generator.o operations.o conditions.o flow_control.o command.o var_map.o
-	g++ parser.tab.cpp lex.yy.c -g3 -o compiler -lfl code_generator.o operations.o conditions.o flow_control.o command.o var_map.o
+	g++ parser.tab.cpp lex.yy.c -g3 -o kompilator -lfl code_generator.o operations.o conditions.o flow_control.o command.o var_map.o
 parse:
 	bison -vd parser.ypp
 lex:

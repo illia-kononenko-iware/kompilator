@@ -6,6 +6,7 @@
     #include "classes/var_map.h"
     #include "classes/variable.h"
     #include "classes/code_generator.h"
+    using namespace std;
 
     extern FILE *yyin;
     
@@ -13,19 +14,16 @@
 
     code_generator* code_generator_instance;
 
-    // std::string code = "";
-
     int yylex(void);
-    void yyerror(std::string error);
+    void yyerror(string error);
 %}
 
 %union {
     uint64_t num;
-    std::string* str;
+    string* str;
     Var* variable;
     Condition cond;
     IfElseParam ifElse;
-    ProcedureStruct procedureParam;
 }
 
 %start program_all
@@ -55,7 +53,6 @@
 %type <str> expression
 %type <cond> condition
 %type <num> procedures
-%type <procedureParam> proc_head
 
 %%
 
@@ -146,7 +143,7 @@ identifier:
 
 %%
 
-void yyerror(std::string error) {
+void yyerror(string error) {
     printf("Error: %s\n", error.c_str());
     exit(1);
 }
@@ -159,7 +156,7 @@ int main(int argc, char **argv)
         exit(-1);
     }
     FILE* input;
-    std::ofstream output = std::ofstream(argv[2]);
+    ofstream output = ofstream(argv[2]);
     input = fopen(argv[1], "r");
 
     var_map_instance = new var_map();
@@ -169,12 +166,11 @@ int main(int argc, char **argv)
 
     try {
         yyparse();
-    } catch (std::string error) {
+    } catch (string error) {
         yyerror(error);
     }
 
-    std::string code = code_generator_instance->getCode();
-    // std::cout << code;
+    string code = code_generator_instance->getCode();
     output << code;
 
     return 0;

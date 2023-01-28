@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+using namespace std;
 
 enum CMD {
     GET,
@@ -27,15 +28,15 @@ enum CMD {
 class Command {
 public:
     Command(CMD name);
-    Command(CMD name, std::string param);
-    void setParam(std::string param);
+    Command(CMD name, string param);
+    void setParam(string param);
 
-    std::string parseToString();
+    string parseToString();
 
 private:
     CMD name;
-    std::string parameter;
-    static std::map<CMD, std::string> CMD_to_str;
+    string parameter;
+    static map<CMD, string> CMD_to_str;
 };
 
 #endif

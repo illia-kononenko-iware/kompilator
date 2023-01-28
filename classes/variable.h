@@ -4,12 +4,12 @@
 #include <string>
 #include <iostream>
 #include "command.h"
+using namespace std;
 
 class Var {
     public:
 
-        Var(std::string name, int address, bool isParameter) {
-            // std::cout << "Inside variable constructor\n";
+        Var(string name, int address, bool isParameter) {
             this->name = name;
             this->address = address;
             this->value = 0;
@@ -19,18 +19,16 @@ class Var {
         }
 
         Var(uint64_t value) {
-            // std::cout << "Inside constant constructor\n";
             this->name = "const";
             this->address = 0;
             this->value = value;
-            // std::cout << "Value: " << this->getConstValue() << std::endl;
             this->isConstant_flag = true;
             this->initialized = true;
         }
 
         int getAddress() { return this->address; }
 
-        std::string getAddressAsString() { return std::to_string(this->address); }
+        string getAddressAsString() { return to_string(this->address); }
 
         Command* getLoadCommand() {
             if (this->isConstant()) {
@@ -69,11 +67,11 @@ class Var {
 
         bool isConstant() { return this->isConstant_flag; }
 
-        std::string getName() { return this->name; }
+        string getName() { return this->name; }
 
         uint64_t getConstValue() { return this->value; }
 
-        std::string getConstValueAsString() { return std::to_string(this->value); }
+        string getConstValueAsString() { return to_string(this->value); }
 
         void initialize() { this->initialized = true; }
 
@@ -81,18 +79,18 @@ class Var {
 
         bool isParameter() { return this->isParameterFlag; }
 
-        std::string getScope() { return this->scopeName; }
+        string getScope() { return this->scopeName; }
 
-        void setScope(std::string name) { this->scopeName = name; }
+        void setScope(string name) { this->scopeName = name; }
 
     private:
-        std::string name;
+        string name;
         int address;
         uint64_t value;
         bool isConstant_flag;
         bool initialized;
         bool isParameterFlag = false;
-        std::string scopeName = "main";
+        string scopeName = "main";
 };
 
 #endif
